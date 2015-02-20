@@ -16,7 +16,7 @@ class RecordInlineForm(forms.ModelForm):
         fields = '__all__'
 
 class DomainCreateForm(forms.ModelForm):
-    template = forms.ModelChoiceField(queryset=DomainTemplate.objects.all())
+    template = forms.ModelChoiceField(queryset=DomainTemplate.objects.all(), required = False)
     def __init__(self, *args, **kwargs):
         super(DomainCreateForm, self).__init__(*args, **kwargs)
 
