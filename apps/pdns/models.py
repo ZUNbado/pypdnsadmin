@@ -13,6 +13,7 @@ class Domain(models.Model):
     type = models.CharField(max_length=6,choices=TYPES)
     notified_serial = models.IntegerField(blank=True, null=True, default=1)
     account = models.CharField(max_length=40, blank=True, null=True)
+    users = models.ManyToManyField(User, blank=True)
 
     class Meta:
         db_table = 'domains'
