@@ -4,8 +4,10 @@ from .models import Domain, Record, DomainTemplate
 from django.contrib.admin import widgets
 
 class RecordInlineForm(forms.ModelForm):
+    add_ptr = forms.NullBooleanField()
     def __init__(self, *args, **kwargs):
         super(RecordInlineForm, self).__init__(*args, **kwargs)
+#        self.fields['add_ptr'].widget = widgets.RadioFieldRenderer()
         if self.instance.pk:
             self.fields['name'].widget.attrs['readonly'] = 'True'
             self.fields['type'].widget = widgets.AdminTextInputWidget()

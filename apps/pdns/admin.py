@@ -27,7 +27,7 @@ class RecordInline(admin.TabularInline):
     form = RecordInlineForm
     fieldsets = (
             (None, {
-                'fields': [ 'name', 'type', 'content', 'ttl', 'prio', 'disabled' ]
+                'fields': [ 'name', 'type', 'content', 'ttl', 'prio', 'add_ptr', 'disabled' ]
                 }),
             )
 
@@ -79,6 +79,23 @@ class DomainAdmin(admin.ModelAdmin):
     def save_related(self, request, form, formsets, change):
         super(DomainAdmin, self).save_related(request, form, formsets, change)
         form.instance.users.add(request.user)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if instance.type == 'A':
+                ptr_dom = u'%s.in-addr.arpa' % '.'.join(reversed(instance.content.split('.')[0:3]))
+                ptr_full = u'%s.in-addr.arpa' % '.'.join(reversed(instance.content.split('.')))
+                try:
+                    domptr = Domain.objects.get(name=ptr_dom)
+                except:
+                    domptr = False
+
+                if domptr:
+                    ptr_record, created = Record.objects.get_or_create(domain=domptr, name=ptr_full, type='PTR', content=instance.name)
+
+
+        formset.save()
 
     def save_model(self, request, obj, form, change):
         super(DomainAdmin, self).save_model(request, obj, form, change)
