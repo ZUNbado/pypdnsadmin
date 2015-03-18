@@ -4,7 +4,7 @@ from .models import Domain, Record, DomainTemplate
 from django.contrib.admin import widgets
 
 class RecordInlineForm(forms.ModelForm):
-    add_ptr = forms.NullBooleanField()
+    add_ptr = forms.BooleanField(label='Add PTR?', initial=False)
     def __init__(self, *args, **kwargs):
         super(RecordInlineForm, self).__init__(*args, **kwargs)
 #        self.fields['add_ptr'].widget = widgets.RadioFieldRenderer()
